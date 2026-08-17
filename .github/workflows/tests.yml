@@ -33,7 +33,7 @@ jobs:
         run: composer config --auth http-basic.composer.fluxui.dev "${{ secrets.FLUXUI_USERNAME }}" "${{ secrets.FLUXUI_LICENSE_KEY }}"
 
       - name: Cache Composer Dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.composer/cache/files
