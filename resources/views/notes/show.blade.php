@@ -26,6 +26,14 @@
                 @endif
             </p>
 
+            @if ($note->tags->isNotEmpty())
+                <div class="mt-4 flex flex-wrap gap-1.5">
+                    @foreach ($note->tags as $tag)
+                        <x-tag-badge :tag="$tag" />
+                    @endforeach
+                </div>
+            @endif
+
             <div class="mt-6 whitespace-pre-line text-sm leading-relaxed text-gray-700 dark:text-zinc-300">
                 {{ $note->content }}
             </div>

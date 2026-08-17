@@ -11,6 +11,6 @@
             New note
         </h1>
 
-        <x-note-form :action="route('notes.store')" submit-label="Create note" />
+        <x-note-form :action="route('notes.store')" :available-tags="$availableTags" submit-label="Create note" />
     </main>
 </x-layout>

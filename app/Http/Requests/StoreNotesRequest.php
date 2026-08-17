@@ -26,6 +26,7 @@ class StoreNotesRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255', new NoteRules],
             'content' => ['required', 'string', new NoteRules],
+            'tags' => ['nullable', 'string', 'max:500'],
         ];
     }
 
