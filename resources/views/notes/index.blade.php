@@ -81,11 +81,94 @@
                 @endif
             </div>
         @else
-            <ul role="list" class="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+            <ul role="list" class="mt-3 grid grid-cols-1 gap-4 md:hidden">
                 @foreach ($notes as $note)
                     <x-note-card :note="$note" />
                 @endforeach
             </ul>
+
+            <div class="mt-3 hidden overflow-hidden rounded-md border border-gray-200 md:block dark:border-zinc-800">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-zinc-800">
+                    <thead class="bg-gray-50 dark:bg-zinc-900">
+                        <tr>
+                            <th scope="col" class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6 dark:text-zinc-100">
+                                Title
+                            </th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-zinc-100">
+                                Content
+                            </th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-zinc-100">
+                                Created
+                            </th>
+                            <th scope="col" class="relative py-3.5 pr-4 pl-3 sm:pr-6">
+                                <span class="sr-only">Edit</span>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-200 bg-white dark:divide-zinc-800 dark:bg-zinc-900">
+                        @foreach ($notes as $note)
+                            @php
+                                $accents = [
+                                    'bg-pink-600',
+                                    'bg-purple-600',
+                                    'bg-yellow-500',
+                                    'bg-green-500',
+                                    'bg-sky-600',
+                                    'bg-indigo-600',
+                                ];
+
+                                $accent = $accents[$note->id % count($accents)];
+
+                                $initials = Str::of($note->title)
+                                    ->squish()
+                                    ->explode(' ')
+                                    ->take(2)
+                                    ->map(fn (string $word): string => Str::upper(Str::substr($word, 0, 1)))
+                                    ->implode('');
+                            @endphp
+
+                            <tr class="hover:bg-gray-50 dark:hover:bg-zinc-800/60">
+                                <td class="py-4 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-6">
+                                    <div class="flex items-center gap-3">
+                                        <div class="{{ $accent }} flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-medium text-white">
+                                            {{ $initials }}
+                                        </div>
+
+                                        <a
+                                            href="{{ route('notes.show', $note) }}"
+                                            class="font-medium text-gray-900 hover:text-gray-600 dark:text-zinc-100 dark:hover:text-zinc-300"
+                                        >
+                                            {{ $note->title }}
+                                        </a>
+                                    </div>
+                                </td>
+
+                                <td class="max-w-xs truncate px-3 py-4 text-sm text-gray-500 dark:text-zinc-400">
+                                    {{ $note->content }}
+                                </td>
+
+                                <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-zinc-400">
+                                    <time
+                                        datetime="{{ $note->created_at->toIso8601String() }}"
+                                    >
+                                        {{ $note->created_at->diffForHumans(short: true) }}
+                                    </time>
+                                </td>
+
+                                <td class="relative py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-6">
+                                    <a
+                                        href="{{ route('notes.edit', $note) }}"
+                                        class="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+                                    >
+                                        Edit<span class="sr-only">, {{ $note->title }}</span>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
 
             @if ($notes->hasPages())
                 <div class="mt-8">
