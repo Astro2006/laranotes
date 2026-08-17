@@ -2,6 +2,9 @@ name: Pull Request | Tests
 
 on: pull_request
 
+permissions:
+  contents: read
+
 jobs:
   pest:
     runs-on: ubuntu-latest
@@ -26,7 +29,8 @@ jobs:
         run: cp .env.example .env
 
       - name: Add Flux license
-        run: composer config http-basic.composer.fluxui.dev ${{ secrets.FLUXUI_USERNAME }} ${{ secrets.FLUXUI_LICENSE_KEY }}
+        if: ${{ secrets.FLUXUI_USERNAME != '' && secrets.FLUXUI_LICENSE_KEY != '' }}
+        run: composer config --auth http-basic.composer.fluxui.dev "${{ secrets.FLUXUI_USERNAME }}" "${{ secrets.FLUXUI_LICENSE_KEY }}"
 
       - name: Cache Composer Dependencies
         uses: actions/cache@v4
