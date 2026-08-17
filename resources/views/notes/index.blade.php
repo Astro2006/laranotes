@@ -1,85 +1,55 @@
 <x-layout title="Notes">
     <main class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14">
         <div class="flex flex-wrap items-center justify-between gap-4">
-            <h2 class="text-sm font-medium text-gray-500 dark:text-zinc-400">
+            <flux:heading size="lg">
                 @if ($search)
                     {{ trans_choice('{0}No notes found|{1}1 note found|[2,*]:count notes found', $notes->total(), ['count' => $notes->total()]) }}
                     for &ldquo;{{ $search }}&rdquo;
                 @else
                     {{ trans_choice('{0}No notes|{1}1 note|[2,*]:count notes', $notes->total(), ['count' => $notes->total()]) }}
                 @endif
-            </h2>
+            </flux:heading>
 
-            <x-button :href="route('notes.create')">
-                <x-slot:icon>
-                    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="-ml-0.5 size-5">
-                        <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
-                    </svg>
-                </x-slot:icon>
-                New note
-            </x-button>
+            <flux:button variant="primary" icon="plus" :href="route('notes.create')">New note</flux:button>
         </div>
 
         <form method="GET" action="{{ route('notes.index') }}" role="search" class="mt-4">
-            <label for="search" class="sr-only">Search notes by title</label>
+            <label for="search" class="sr-only">Search notes by title or content</label>
 
-            <div class="relative sm:max-w-xs">
-                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-4 text-gray-400 dark:text-zinc-500">
-                        <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-
-                <input
+            <div class="flex items-center gap-2 sm:max-w-xs">
+                <flux:input
                     id="search"
                     name="search"
                     type="search"
                     value="{{ $search }}"
-                    placeholder="Search notes by title&hellip;"
-                    class="block w-full rounded-md border border-gray-300 bg-white py-2 pr-9 pl-9 text-sm text-gray-900 shadow-xs transition focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
-                >
+                    icon="magnifying-glass"
+                    placeholder="Search notes by title or content&hellip;"
+                />
 
                 @if ($search)
-                    <a
-                        href="{{ route('notes.index') }}"
-                        aria-label="Clear search"
-                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:text-zinc-500 dark:hover:text-zinc-300"
-                    >
-                        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-4">
-                            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-                        </svg>
-                    </a>
+                    <flux:button variant="ghost" size="sm" :href="route('notes.index')">Clear</flux:button>
                 @endif
             </div>
         </form>
 
         @if ($notes->isEmpty())
-            <div class="mt-3 rounded-md border border-dashed border-gray-300 px-6 py-16 text-center dark:border-zinc-700">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" class="mx-auto size-12 text-gray-400 dark:text-zinc-600">
-                    <path d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
+            <flux:card class="mt-3 border-dashed px-6 py-16 text-center">
+                <flux:icon.document-text class="mx-auto size-12 text-gray-400 dark:text-zinc-600" />
 
                 @if ($search)
-                    <h3 class="mt-2 text-sm font-semibold text-gray-900 dark:text-zinc-100">No notes found</h3>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-zinc-400">No notes match &ldquo;{{ $search }}&rdquo;. Try a different title.</p>
+                    <flux:heading size="sm" class="mt-4">No notes found</flux:heading>
+                    <flux:text class="mt-1">No notes match &ldquo;{{ $search }}&rdquo;. Try a different search term.</flux:text>
                     <div class="mt-6">
-                        <x-button variant="secondary" :href="route('notes.index')">Clear search</x-button>
+                        <flux:button :href="route('notes.index')">Clear search</flux:button>
                     </div>
                 @else
-                    <h3 class="mt-2 text-sm font-semibold text-gray-900 dark:text-zinc-100">No notes</h3>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-zinc-400">Get started by creating a new note.</p>
+                    <flux:heading size="sm" class="mt-4">No notes</flux:heading>
+                    <flux:text class="mt-1">Get started by creating a new note.</flux:text>
                     <div class="mt-6">
-                        <x-button :href="route('notes.create')">
-                            <x-slot:icon>
-                                <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="-ml-0.5 size-5">
-                                    <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
-                                </svg>
-                            </x-slot:icon>
-                            New note
-                        </x-button>
+                        <flux:button variant="primary" icon="plus" :href="route('notes.create')">New note</flux:button>
                     </div>
                 @endif
-            </div>
+            </flux:card>
         @else
             <ul role="list" class="mt-3 grid grid-cols-1 gap-4 md:hidden">
                 @foreach ($notes as $note)
@@ -87,53 +57,21 @@
                 @endforeach
             </ul>
 
-            <div class="mt-3 hidden overflow-hidden rounded-md border border-gray-200 md:block dark:border-zinc-800">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-zinc-800">
-                    <thead class="bg-gray-50 dark:bg-zinc-900">
-                        <tr>
-                            <th scope="col" class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6 dark:text-zinc-100">
-                                Title
-                            </th>
-                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-zinc-100">
-                                Content
-                            </th>
-                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-zinc-100">
-                                Created
-                            </th>
-                            <th scope="col" class="relative py-3.5 pr-4 pl-3 sm:pr-6">
-                                <span class="sr-only">Edit</span>
-                            </th>
-                        </tr>
-                    </thead>
+            <div class="mt-3 hidden md:block">
+                <flux:table>
+                    <flux:table.columns>
+                        <flux:table.column>Title</flux:table.column>
+                        <flux:table.column>Content</flux:table.column>
+                        <flux:table.column>Created</flux:table.column>
+                        <flux:table.column></flux:table.column>
+                    </flux:table.columns>
 
-                    <tbody class="divide-y divide-gray-200 bg-white dark:divide-zinc-800 dark:bg-zinc-900">
+                    <flux:table.rows>
                         @foreach ($notes as $note)
-                            @php
-                                $accents = [
-                                    'bg-pink-600',
-                                    'bg-purple-600',
-                                    'bg-yellow-500',
-                                    'bg-green-500',
-                                    'bg-sky-600',
-                                    'bg-indigo-600',
-                                ];
-
-                                $accent = $accents[$note->id % count($accents)];
-
-                                $initials = Str::of($note->title)
-                                    ->squish()
-                                    ->explode(' ')
-                                    ->take(2)
-                                    ->map(fn (string $word): string => Str::upper(Str::substr($word, 0, 1)))
-                                    ->implode('');
-                            @endphp
-
-                            <tr class="hover:bg-gray-50 dark:hover:bg-zinc-800/60">
-                                <td class="py-4 pr-3 pl-4 text-sm whitespace-nowrap sm:pl-6">
+                            <flux:table.row :key="$note->id">
+                                <flux:table.cell>
                                     <div class="flex items-center gap-3">
-                                        <div class="{{ $accent }} flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-medium text-white">
-                                            {{ $initials }}
-                                        </div>
+                                        <flux:avatar size="sm" name="{{ $note->title }}" color="auto" color:seed="{{ $note->id }}" />
 
                                         <a
                                             href="{{ route('notes.show', $note) }}"
@@ -142,32 +80,25 @@
                                             {{ $note->title }}
                                         </a>
                                     </div>
-                                </td>
+                                </flux:table.cell>
 
-                                <td class="max-w-xs truncate px-3 py-4 text-sm text-gray-500 dark:text-zinc-400">
-                                    {{ $note->content }}
-                                </td>
+                                <flux:table.cell class="max-w-xs truncate">{{ $note->content }}</flux:table.cell>
 
-                                <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-zinc-400">
-                                    <time
-                                        datetime="{{ $note->created_at->toIso8601String() }}"
-                                    >
+                                <flux:table.cell class="whitespace-nowrap">
+                                    <time datetime="{{ $note->created_at->toIso8601String() }}">
                                         {{ $note->created_at->diffForHumans(short: true) }}
                                     </time>
-                                </td>
+                                </flux:table.cell>
 
-                                <td class="relative py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-6">
-                                    <a
-                                        href="{{ route('notes.edit', $note) }}"
-                                        class="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
-                                    >
+                                <flux:table.cell align="end">
+                                    <flux:button variant="ghost" size="sm" icon="pencil" :href="route('notes.edit', $note)">
                                         Edit<span class="sr-only">, {{ $note->title }}</span>
-                                    </a>
-                                </td>
-                            </tr>
+                                    </flux:button>
+                                </flux:table.cell>
+                            </flux:table.row>
                         @endforeach
-                    </tbody>
-                </table>
+                    </flux:table.rows>
+                </flux:table>
             </div>
 
             @if ($notes->hasPages())
