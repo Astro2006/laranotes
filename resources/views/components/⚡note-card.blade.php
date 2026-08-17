@@ -1,4 +1,14 @@
-@props(['note'])
+<?php
+
+use App\Models\Notes;
+use Illuminate\Support\Str;
+use Livewire\Component;
+
+new class extends Component
+{
+    public Notes $note;
+};
+?>
 
 <li>
     <flux:card class="flex items-center gap-4 p-4">
@@ -7,12 +17,13 @@
         <div class="min-w-0 flex-1">
             <a
                 href="{{ route('notes.show', $note) }}"
+                wire:navigate
                 class="font-medium text-gray-900 hover:text-gray-600 dark:text-zinc-100 dark:hover:text-zinc-300"
             >
                 {{ $note->title }}
             </a>
 
-            <p class="truncate text-gray-500 dark:text-zinc-400">{{ $note->content }}</p>
+            <p class="truncate text-gray-500 dark:text-zinc-400">{{ Str::of($note->content)->stripTags()->squish() }}</p>
         </div>
 
         <time

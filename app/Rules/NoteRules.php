@@ -22,7 +22,7 @@ class NoteRules implements ValidationRule
             return;
         }
 
-        if (Str::of($value)->trim()->isEmpty()) {
+        if (Str::of(strip_tags($value))->trim()->isEmpty()) {
             $fail(__('The :attribute must not consist only of whitespace.'));
         }
     }

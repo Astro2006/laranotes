@@ -2,96 +2,109 @@
 
 use App\Models\Notes;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
 
 test('create page renders the note form', function () {
-    $response = $this->get(route('notes.create'));
-
-    $response->assertOk();
-    $response->assertSeeText('New note');
-    $response->assertSeeText('Title');
-    $response->assertSeeText('Content');
+    Livewire::test('pages::notes.create')
+        ->assertSee('New note')
+        ->assertSee('Title')
+        ->assertSee('Content');
 });
 
-test('storing a note creates it and redirects to the show page', function () {
-    $note = Notes::factory()->make();
+test('saving a new note creates it and redirects to the show page', function () {
+    Livewire::test('note-form')
+        ->set('title', 'Grocery list')
+        ->set('content', '<p>Buy milk and eggs</p>')
+        ->call('save')
+        ->assertRedirect(route('notes.show', Notes::sole()));
 
-    $response = $this->post(route('notes.store'), [
-        'title' => $note->title,
-        'content' => $note->content,
-    ]);
-
-    $created = Notes::sole();
-
-    $response->assertRedirect(route('notes.show', $created));
     $this->assertDatabaseHas('notes', [
-        'title' => $note->title,
-        'content' => $note->content,
+        'title' => 'Grocery list',
+        'content' => '<p>Buy milk and eggs</p>',
     ]);
 });
 
-test('storing a note requires a title and content', function () {
-    $response = $this->post(route('notes.store'), [
-        'title' => '',
-        'content' => '',
-    ]);
+test('saving a note strips disallowed html from content', function () {
+    Livewire::test('note-form')
+        ->set('title', 'Grocery list')
+        ->set('content', '<script>alert(1)</script><p onclick="evil()">Buy milk</p>')
+        ->call('save');
 
-    $response->assertSessionHasErrors(['title', 'content']);
+    $note = Notes::sole();
+
+    expect($note->content)
+        ->not->toContain('<script')
+        ->not->toContain('onclick')
+        ->toContain('<p>Buy milk</p>');
+});
+
+test('a note requires a title and content', function () {
+    Livewire::test('note-form')
+        ->set('title', '')
+        ->set('content', '')
+        ->call('save')
+        ->assertHasErrors(['title', 'content']);
+
     $this->assertDatabaseCount('notes', 0);
 });
 
-test('show page displays the note', function () {
-    $note = Notes::factory()->create();
-
-    $response = $this->get(route('notes.show', $note));
-
-    $response->assertOk();
-    $response->assertSeeText($note->title);
-    $response->assertSeeText($note->content);
+test('a note requires non-empty content even when the editor only sent empty markup', function () {
+    Livewire::test('note-form')
+        ->set('title', 'Empty note')
+        ->set('content', '<p></p>')
+        ->call('save')
+        ->assertHasErrors('content');
 });
 
-test('edit page renders the form pre-filled with the note', function () {
+test('show page displays the note', function () {
+    $note = Notes::factory()->create(['content' => '<p>Hello world</p>']);
+
+    Livewire::test('pages::notes.show', ['note' => $note])
+        ->assertSee($note->title)
+        ->assertSee('Hello world');
+});
+
+test('edit form is pre-filled with the note', function () {
     $note = Notes::factory()->create();
 
-    $response = $this->get(route('notes.edit', $note));
-
-    $response->assertOk();
-    $response->assertSee($note->title);
-    $response->assertSeeText($note->content);
+    Livewire::test('note-form', ['note' => $note])
+        ->assertSet('title', $note->title)
+        ->assertSet('content', $note->content);
 });
 
 test('updating a note persists changes and redirects to the show page', function () {
     $note = Notes::factory()->create();
 
-    $response = $this->put(route('notes.update', $note), [
-        'title' => 'Updated title',
-        'content' => 'Updated content',
-    ]);
+    Livewire::test('note-form', ['note' => $note])
+        ->set('title', 'Updated title')
+        ->set('content', '<p>Updated content</p>')
+        ->call('save')
+        ->assertRedirect(route('notes.show', $note));
 
-    $response->assertRedirect(route('notes.show', $note));
     $this->assertDatabaseHas('notes', [
         'id' => $note->id,
         'title' => 'Updated title',
-        'content' => 'Updated content',
+        'content' => '<p>Updated content</p>',
     ]);
 });
 
 test('updating a note requires a non-empty title', function () {
     $note = Notes::factory()->create();
 
-    $response = $this->put(route('notes.update', $note), [
-        'title' => '',
-    ]);
-
-    $response->assertSessionHasErrors('title');
+    Livewire::test('note-form', ['note' => $note])
+        ->set('title', '')
+        ->call('save')
+        ->assertHasErrors('title');
 });
 
 test('deleting a note removes it and redirects to the index page', function () {
     $note = Notes::factory()->create();
 
-    $response = $this->delete(route('notes.destroy', $note));
+    Livewire::test('pages::notes.show', ['note' => $note])
+        ->call('delete')
+        ->assertRedirect(route('notes.index'));
 
-    $response->assertRedirect(route('notes.index'));
     $this->assertDatabaseMissing('notes', ['id' => $note->id]);
 });
