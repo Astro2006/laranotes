@@ -6,6 +6,7 @@ use Database\Factories\NotesFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Notes extends Model
 {
@@ -14,6 +15,14 @@ class Notes extends Model
 
     /** @var array<int, string> */
     protected $guarded = [];
+
+    /**
+     * @return BelongsToMany<Tag, $this>
+     */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'note_tag', 'note_id', 'tag_id');
+    }
 
     /**
      * Scope a query to only include notes whose title or content matches the given search term.

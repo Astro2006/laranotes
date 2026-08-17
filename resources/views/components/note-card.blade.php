@@ -13,6 +13,14 @@
             </a>
 
             <p class="truncate text-gray-500 dark:text-zinc-400">{{ $note->content }}</p>
+
+            @if ($note->tags->isNotEmpty())
+                <div class="mt-2 flex flex-wrap gap-1">
+                    @foreach ($note->tags as $tag)
+                        <flux:badge size="sm">{{ $tag->name }}</flux:badge>
+                    @endforeach
+                </div>
+            @endif
         </div>
 
         <time

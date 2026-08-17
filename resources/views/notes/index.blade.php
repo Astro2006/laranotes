@@ -10,7 +10,10 @@
                 @endif
             </flux:heading>
 
-            <flux:button variant="primary" icon="plus" :href="route('notes.create')">New note</flux:button>
+            <div class="flex items-center gap-2">
+                <flux:button icon="tag" :href="route('tags.index')">Manage tags</flux:button>
+                <flux:button variant="primary" icon="plus" :href="route('notes.create')">New note</flux:button>
+            </div>
         </div>
 
         <form method="GET" action="{{ route('notes.index') }}" role="search" class="mt-4">
@@ -62,6 +65,7 @@
                     <flux:table.columns>
                         <flux:table.column>Title</flux:table.column>
                         <flux:table.column>Content</flux:table.column>
+                        <flux:table.column>Tags</flux:table.column>
                         <flux:table.column>Created</flux:table.column>
                         <flux:table.column></flux:table.column>
                     </flux:table.columns>
@@ -83,6 +87,14 @@
                                 </flux:table.cell>
 
                                 <flux:table.cell class="max-w-xs truncate">{{ $note->content }}</flux:table.cell>
+
+                                <flux:table.cell>
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach ($note->tags as $tag)
+                                            <flux:badge size="sm">{{ $tag->name }}</flux:badge>
+                                        @endforeach
+                                    </div>
+                                </flux:table.cell>
 
                                 <flux:table.cell class="whitespace-nowrap">
                                     <time datetime="{{ $note->created_at->toIso8601String() }}">

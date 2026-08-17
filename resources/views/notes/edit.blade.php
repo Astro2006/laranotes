@@ -10,6 +10,7 @@
             :action="route('notes.update', $note)"
             method="PUT"
             :note="$note"
+            :tags="$tags"
             submit-label="Save changes"
         />
     </main>

@@ -24,6 +24,14 @@
             <div class="mt-6 whitespace-pre-line text-sm leading-relaxed text-gray-700 dark:text-zinc-300">
                 {{ $note->content }}
             </div>
+
+            @if ($note->tags->isNotEmpty())
+                <div class="mt-6 flex flex-wrap gap-2">
+                    @foreach ($note->tags as $tag)
+                        <flux:badge size="sm">{{ $tag->name }}</flux:badge>
+                    @endforeach
+                </div>
+            @endif
         </flux:card>
 
         <div class="mt-6 flex flex-wrap items-center gap-3">

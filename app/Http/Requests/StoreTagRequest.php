@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\NoteRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreNotesRequest extends FormRequest
+class StoreTagRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,7 @@ class StoreNotesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255', new NoteRules],
-            'content' => ['required', 'string', new NoteRules],
-            'tags' => ['array'],
-            'tags.*' => ['integer', 'exists:tags,id'],
+            'name' => ['required', 'string', 'max:255', Rule::unique('tags', 'name')],
         ];
     }
 
@@ -39,8 +36,8 @@ class StoreNotesRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.required' => __('A note needs a title.'),
-            'content.required' => __('A note needs some content.'),
+            'name.required' => __('A tag needs a name.'),
+            'name.unique' => __('A tag with this name already exists.'),
         ];
     }
 }

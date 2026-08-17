@@ -6,6 +6,6 @@
 
         <flux:heading size="xl" class="mt-6">New note</flux:heading>
 
-        <x-note-form :action="route('notes.store')" submit-label="Create note" />
+        <x-note-form :action="route('notes.store')" :tags="$tags" submit-label="Create note" />
     </main>
 </x-layout>

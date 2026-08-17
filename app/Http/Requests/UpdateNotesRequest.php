@@ -29,6 +29,8 @@ class UpdateNotesRequest extends FormRequest
         return [
             'title' => ['sometimes', 'required', 'string', 'max:255', new NoteRules],
             'content' => ['sometimes', 'required', 'string', new NoteRules],
+            'tags' => ['array'],
+            'tags.*' => ['integer', 'exists:tags,id'],
         ];
     }
 
