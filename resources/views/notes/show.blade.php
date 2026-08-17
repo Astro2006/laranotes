@@ -7,6 +7,14 @@
         <flux:card class="mt-6 p-6 sm:p-8">
             <flux:heading size="xl">{{ $note->title }}</flux:heading>
 
+            @if ($note->tags->isNotEmpty())
+                <div class="mt-3 flex flex-wrap gap-1">
+                    @foreach ($note->tags as $tag)
+                        <x-tag-badge :tag="$tag" />
+                    @endforeach
+                </div>
+            @endif
+
             <flux:text variant="subtle" class="mt-1 text-xs">
                 Created
                 <time datetime="{{ $note->created_at->toIso8601String() }}">

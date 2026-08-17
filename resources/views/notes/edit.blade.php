@@ -6,11 +6,6 @@
 
         <flux:heading size="xl" class="mt-6">Edit note</flux:heading>
 
-        <x-note-form
-            :action="route('notes.update', $note)"
-            method="PUT"
-            :note="$note"
-            submit-label="Save changes"
-        />
+        <livewire:note-form :note="$note" />
     </main>
 </x-layout>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreNotesRequest;
 use App\Http\Requests\UpdateNotesRequest;
 use App\Models\Notes;
+use App\Models\Tags;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class NotesController extends Controller
         $search = $request->string('search')->trim()->value() ?: null;
 
         return view('notes.index', [
-            'notes' => Notes::search($search)->latest()->paginate(15)->withQueryString(),
+            'notes' => Notes::search($search)->with('tags')->latest()->paginate(15)->withQueryString(),
             'search' => $search,
         ]);
     }
@@ -37,7 +38,9 @@ class NotesController extends Controller
      */
     public function store(StoreNotesRequest $request): RedirectResponse
     {
-        $note = Notes::create($request->validated());
+        $note = Notes::create($request->safe()->except('tags'));
+
+        $note->tags()->sync(Tags::fromNameList($request->validated('tags'))->pluck('id'));
 
         return redirect()->route('notes.show', $note);
     }
@@ -48,7 +51,7 @@ class NotesController extends Controller
     public function show(Notes $note): View
     {
         return view('notes.show', [
-            'note' => $note,
+            'note' => $note->load('tags'),
         ]);
     }
 
@@ -58,7 +61,7 @@ class NotesController extends Controller
     public function edit(Notes $note): View
     {
         return view('notes.edit', [
-            'note' => $note,
+            'note' => $note->load('tags'),
         ]);
     }
 
@@ -67,7 +70,11 @@ class NotesController extends Controller
      */
     public function update(UpdateNotesRequest $request, Notes $note): RedirectResponse
     {
-        $note->update($request->validated());
+        $note->update($request->safe()->except('tags'));
+
+        if ($request->has('tags')) {
+            $note->tags()->sync(Tags::fromNameList($request->validated('tags'))->pluck('id'));
+        }
 
         return redirect()->route('notes.show', $note);
     }

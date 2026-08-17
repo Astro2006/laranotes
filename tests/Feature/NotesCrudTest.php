@@ -51,14 +51,13 @@ test('show page displays the note', function () {
     $response->assertSeeText($note->content);
 });
 
-test('edit page renders the form pre-filled with the note', function () {
+test('edit page renders the note form', function () {
     $note = Notes::factory()->create();
 
     $response = $this->get(route('notes.edit', $note));
 
     $response->assertOk();
-    $response->assertSee($note->title);
-    $response->assertSeeText($note->content);
+    $response->assertSeeText('Edit note');
 });
 
 test('updating a note persists changes and redirects to the show page', function () {

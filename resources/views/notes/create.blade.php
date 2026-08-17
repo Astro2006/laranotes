@@ -6,6 +6,6 @@
 
         <flux:heading size="xl" class="mt-6">New note</flux:heading>
 
-        <x-note-form :action="route('notes.store')" submit-label="Create note" />
+        <livewire:note-form />
     </main>
 </x-layout>
