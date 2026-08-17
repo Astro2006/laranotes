@@ -7,16 +7,20 @@ use App\Http\Requests\UpdateNotesRequest;
 use App\Models\Notes;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class NotesController extends Controller
 {
     /**
      * Display a paginated listing of the notes.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
+        $search = $request->string('search')->trim()->value() ?: null;
+
         return view('notes.index', [
-            'notes' => Notes::latest()->paginate(15),
+            'notes' => Notes::search($search)->latest()->paginate(15)->withQueryString(),
+            'search' => $search,
         ]);
     }
 

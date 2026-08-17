@@ -25,7 +25,7 @@
         {{ $initials }}
     </div>
 
-    <div class="flex flex-1 items-center justify-between truncate rounded-r-md border-t border-r border-b border-gray-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+    <div class="flex flex-1 items-center justify-between truncate rounded-r-md border-t border-r border-b border-gray-200 bg-white transition-shadow hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900">
         <div class="flex-1 truncate px-4 py-2 text-sm">
             <a
                 href="{{ route('notes.show', $note) }}"
