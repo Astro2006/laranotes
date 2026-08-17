@@ -28,6 +28,18 @@ test('notes can be searched by title', function () {
     $response->assertDontSeeText('Meeting notes');
 });
 
+test('notes can be searched by content', function () {
+    Notes::factory()->create(['title' => 'Grocery list', 'content' => 'Remember to buy xylophones and kumquats']);
+    Notes::factory()->create(['title' => 'Meeting notes', 'content' => 'Discuss the quarterly roadmap']);
+
+    $response = $this->get(route('notes.index', ['search' => 'xylophones']));
+
+    $response->assertOk();
+    $response->assertViewHas('notes', fn ($notes) => $notes->total() === 1);
+    $response->assertSeeText('Grocery list');
+    $response->assertDontSeeText('Meeting notes');
+});
+
 test('notes search is case insensitive', function () {
     Notes::factory()->create(['title' => 'Grocery list']);
 
