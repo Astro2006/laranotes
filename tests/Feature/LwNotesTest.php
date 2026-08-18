@@ -46,6 +46,25 @@ test('the lw note show page uses the uuid instead of the incrementing id', funct
         ->not->toContain("/lw/notes/{$note->id}");
 });
 
+test('the lw notes index page includes a delete confirmation modal for each note', function () {
+    $note = Notes::factory()->create();
+
+    $response = $this->get(route('lw.notes.index'));
+
+    $response->assertOk();
+    $response->assertSeeText('Delete note?');
+});
+
+test('deleting a note from the lw index page dispatches a toast', function () {
+    $note = Notes::factory()->create();
+
+    Livewire::test('pages::lw.notes.index')
+        ->call('delete', $note->id)
+        ->assertDispatched('toast-show');
+
+    $this->assertDatabaseMissing('notes', ['id' => $note->id]);
+});
+
 test('the lw note show page includes a delete confirmation modal', function () {
     $note = Notes::factory()->create();
 

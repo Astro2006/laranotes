@@ -52,6 +52,16 @@ test('show page displays the note', function () {
     $response->assertSeeText($note->content);
 });
 
+test('index page includes a delete confirmation modal for each note', function () {
+    $note = Notes::factory()->create();
+
+    $response = $this->get(route('notes.index'));
+
+    $response->assertOk();
+    $response->assertSeeText('Delete note?');
+    $response->assertSee(route('notes.destroy', $note), false);
+});
+
 test('show page includes a delete confirmation modal', function () {
     $note = Notes::factory()->create();
 

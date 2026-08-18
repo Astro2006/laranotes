@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Notes;
+use Flux\Flux;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
@@ -17,6 +18,13 @@ new #[Title('Notes (Livewire)')] class extends Component
     public function updatedSearch(): void
     {
         $this->resetPage();
+    }
+
+    public function delete(int $id): void
+    {
+        Notes::findOrFail($id)->delete();
+
+        Flux::toast(text: 'Note deleted.', variant: 'danger');
     }
 
     public function with(): array
@@ -116,15 +124,48 @@ new #[Title('Notes (Livewire)')] class extends Component
                             </flux:table.cell>
 
                             <flux:table.cell align="end">
-                                <flux:button variant="ghost" size="sm" icon="pencil" :href="route('lw.notes.edit', $note)" wire:navigate>
-                                    Edit<span class="sr-only">, {{ $note->title }}</span>
-                                </flux:button>
+                                <div class="flex justify-end gap-1">
+                                    <flux:button variant="ghost" size="sm" icon="pencil" :href="route('lw.notes.edit', $note)" wire:navigate>
+                                        Edit<span class="sr-only">, {{ $note->title }}</span>
+                                    </flux:button>
+
+                                    <flux:modal.trigger name="delete-note-{{ $note->id }}">
+                                        <flux:button variant="ghost" size="sm" icon="trash">
+                                            Delete<span class="sr-only">, {{ $note->title }}</span>
+                                        </flux:button>
+                                    </flux:modal.trigger>
+                                </div>
                             </flux:table.cell>
                         </flux:table.row>
                     @endforeach
                 </flux:table.rows>
             </flux:table>
         </div>
+
+        @foreach ($notes as $note)
+            <flux:modal name="delete-note-{{ $note->id }}" class="min-w-88">
+                <div class="space-y-6">
+                    <div>
+                        <flux:heading size="lg">Delete note?</flux:heading>
+
+                        <flux:text class="mt-2">
+                            You're about to delete "{{ $note->title }}".<br>
+                            This action cannot be reversed.
+                        </flux:text>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <flux:spacer />
+
+                        <flux:modal.close>
+                            <flux:button variant="ghost">Cancel</flux:button>
+                        </flux:modal.close>
+
+                        <flux:button type="button" variant="danger" wire:click="delete({{ $note->id }})">Delete note</flux:button>
+                    </div>
+                </div>
+            </flux:modal>
+        @endforeach
 
         @if ($notes->hasPages())
             <div class="mt-8">

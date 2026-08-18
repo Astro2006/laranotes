@@ -100,15 +100,53 @@
                                 </flux:table.cell>
 
                                 <flux:table.cell align="end">
-                                    <flux:button variant="ghost" size="sm" icon="pencil" :href="route('notes.edit', $note)">
-                                        Edit<span class="sr-only">, {{ $note->title }}</span>
-                                    </flux:button>
+                                    <div class="flex justify-end gap-1">
+                                        <flux:button variant="ghost" size="sm" icon="pencil" :href="route('notes.edit', $note)">
+                                            Edit<span class="sr-only">, {{ $note->title }}</span>
+                                        </flux:button>
+
+                                        <flux:modal.trigger name="delete-note-{{ $note->id }}">
+                                            <flux:button variant="ghost" size="sm" icon="trash">
+                                                Delete<span class="sr-only">, {{ $note->title }}</span>
+                                            </flux:button>
+                                        </flux:modal.trigger>
+                                    </div>
                                 </flux:table.cell>
                             </flux:table.row>
                         @endforeach
                     </flux:table.rows>
                 </flux:table>
             </div>
+
+            @foreach ($notes as $note)
+                <flux:modal name="delete-note-{{ $note->id }}" class="min-w-88">
+                    <div class="space-y-6">
+                        <div>
+                            <flux:heading size="lg">Delete note?</flux:heading>
+
+                            <flux:text class="mt-2">
+                                You're about to delete "{{ $note->title }}".<br>
+                                This action cannot be reversed.
+                            </flux:text>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <flux:spacer />
+
+                            <flux:modal.close>
+                                <flux:button variant="ghost">Cancel</flux:button>
+                            </flux:modal.close>
+
+                            <form method="POST" action="{{ route('notes.destroy', $note) }}">
+                                @csrf
+                                @method('DELETE')
+
+                                <flux:button type="submit" variant="danger">Delete note</flux:button>
+                            </form>
+                        </div>
+                    </div>
+                </flux:modal>
+            @endforeach
 
             @if ($notes->hasPages())
                 <div class="mt-8">
