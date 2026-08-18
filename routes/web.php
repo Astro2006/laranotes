@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\NotesController;
+use App\NativeComponents\NotesIndex;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/notes');
+
+Route::native('/notes-native', NotesIndex::class);
 
 Route::get('notes/native/create', [NotesController::class, 'presentNativeCreate'])->name('notes.native.create');
 Route::get('notes/native/{note}/edit', [NotesController::class, 'presentNativeEdit'])->name('notes.native.edit');
