@@ -137,6 +137,23 @@ test('typing a new tag name and creating it adds it to the selection', function 
         ->and(Tags::count())->toBe(1);
 });
 
+test('creating a note through the note form dispatches a success toast', function () {
+    Livewire::test('note-form')
+        ->set('title', 'My note')
+        ->set('content', 'Some content')
+        ->call('save')
+        ->assertDispatched('toast-show');
+});
+
+test('saving edits through the note form dispatches a success toast', function () {
+    $note = Notes::factory()->create();
+
+    Livewire::test('note-form', ['note' => $note])
+        ->set('title', 'Updated title')
+        ->call('save')
+        ->assertDispatched('toast-show');
+});
+
 test('editing a note through the note form pre-fills its title, content, and tags', function () {
     $note = Notes::factory()->create();
     $tag = Tags::factory()->create(['name' => 'urgent']);

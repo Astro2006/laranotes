@@ -52,6 +52,16 @@ test('show page displays the note', function () {
     $response->assertSeeText($note->content);
 });
 
+test('show page includes a delete confirmation modal', function () {
+    $note = Notes::factory()->create();
+
+    $response = $this->get(route('notes.show', $note));
+
+    $response->assertOk();
+    $response->assertSeeText('Delete note?');
+    $response->assertSee(route('notes.destroy', $note), false);
+});
+
 test('edit page renders the note form', function () {
     $note = Notes::factory()->create();
 
@@ -114,4 +124,22 @@ test('visiting a note by its raw incrementing id returns not found', function ()
     $response = $this->get("/notes/{$note->id}");
 
     $response->assertNotFound();
+});
+
+test('a flashed toast renders on the page after the redirect', function () {
+    $note = Notes::factory()->create();
+
+    $this->delete(route('notes.destroy', $note));
+
+    $response = $this->get(route('notes.index'));
+
+    $response->assertOk();
+    $response->assertSee('Note deleted.', false);
+});
+
+test('no toast is rendered when nothing was flashed', function () {
+    $response = $this->get(route('notes.index'));
+
+    $response->assertOk();
+    $response->assertDontSee('$flux.toast', false);
 });
