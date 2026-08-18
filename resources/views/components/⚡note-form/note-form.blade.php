@@ -1,7 +1,7 @@
 <form wire:submit="save" class="mt-6 space-y-6">
     <flux:field>
         <flux:label>Title</flux:label>
-        <flux:input wire:model="title" required maxlength="255" />
+        <flux:input wire:model="title" required maxlength="255" autofocus />
         <flux:error name="title" />
     </flux:field>
 
