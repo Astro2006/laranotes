@@ -30,7 +30,7 @@ new #[Title('Notes (Livewire)')] class extends Component
     public function with(): array
     {
         return [
-            'notes' => Notes::search($this->search ?: null)->latest()->paginate(15),
+            'notes' => Notes::search($this->search ?: null)->with('tags')->latest()->paginate(15),
         ];
     }
 };
@@ -94,6 +94,7 @@ new #[Title('Notes (Livewire)')] class extends Component
                 <flux:table.columns>
                     <flux:table.column>{{ __('Title') }}</flux:table.column>
                     <flux:table.column>{{ __('Content') }}</flux:table.column>
+                    <flux:table.column>{{ __('Tags') }}</flux:table.column>
                     <flux:table.column>{{ __('Created') }}</flux:table.column>
                     <flux:table.column></flux:table.column>
                 </flux:table.columns>
@@ -116,6 +117,14 @@ new #[Title('Notes (Livewire)')] class extends Component
                             </flux:table.cell>
 
                             <flux:table.cell class="max-w-xs truncate">{{ Str::of($note->content)->stripTags()->squish() }}</flux:table.cell>
+
+                            <flux:table.cell>
+                                <div class="flex flex-wrap gap-1">
+                                    @foreach ($note->tags as $tag)
+                                        <x-tag-badge :tag="$tag" />
+                                    @endforeach
+                                </div>
+                            </flux:table.cell>
 
                             <flux:table.cell class="whitespace-nowrap">
                                 <time datetime="{{ $note->created_at->toIso8601String() }}">

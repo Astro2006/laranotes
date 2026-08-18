@@ -46,6 +46,17 @@ test('the lw note show page uses the uuid instead of the incrementing id', funct
         ->not->toContain("/lw/notes/{$note->id}");
 });
 
+test('the lw notes index page includes a tags column with tag badges', function () {
+    $note = Notes::factory()->create();
+    $note->tags()->attach(Tags::factory()->create(['name' => 'urgent'])->id);
+
+    $response = $this->get(route('lw.notes.index'));
+
+    $response->assertOk();
+    $response->assertSeeText('Tags');
+    $response->assertSeeText('urgent');
+});
+
 test('the lw notes index page includes a delete confirmation modal for each note', function () {
     $note = Notes::factory()->create();
 
