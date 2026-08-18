@@ -12,7 +12,7 @@ new class extends Component
     {
         $this->note->delete();
 
-        Flux::toast(text: 'Note deleted.', variant: 'danger');
+        Flux::toast(text: __('Note deleted.'), variant: 'danger');
 
         $this->redirect(route('lw.notes.index'), navigate: true);
     }
@@ -26,7 +26,7 @@ new class extends Component
 
 <main class="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
     <flux:button variant="ghost" size="sm" icon="arrow-left" :href="route('lw.notes.index')" wire:navigate>
-        All notes
+        {{ __('All notes') }}
     </flux:button>
 
     <flux:card class="mt-6 p-6 sm:p-8">
@@ -41,13 +41,13 @@ new class extends Component
         @endif
 
         <flux:text variant="subtle" class="mt-1 text-xs">
-            Created
+            {{ __('Created') }}
             <time datetime="{{ $note->created_at->toIso8601String() }}">
                 {{ $note->created_at->isoFormat('LLL') }}
             </time>
 
             @if ($note->updated_at->ne($note->created_at))
-                &middot; edited
+                &middot; {{ __('edited') }}
                 <time datetime="{{ $note->updated_at->toIso8601String() }}">
                     {{ $note->updated_at->diffForHumans() }}
                 </time>
@@ -69,21 +69,21 @@ new class extends Component
     </flux:card>
 
     <div class="mt-6 flex flex-wrap items-center gap-3">
-        <flux:button variant="primary" icon="pencil" :href="route('lw.notes.edit', $note)" wire:navigate>Edit note</flux:button>
+        <flux:button variant="primary" icon="pencil" :href="route('lw.notes.edit', $note)" wire:navigate>{{ __('Edit note') }}</flux:button>
 
         <flux:modal.trigger name="delete-note">
-            <flux:button variant="danger" icon="trash">Delete note</flux:button>
+            <flux:button variant="danger" icon="trash">{{ __('Delete note') }}</flux:button>
         </flux:modal.trigger>
     </div>
 
     <flux:modal name="delete-note" class="min-w-88">
         <div class="space-y-6">
             <div>
-                <flux:heading size="lg">Delete note?</flux:heading>
+                <flux:heading size="lg">{{ __('Delete note?') }}</flux:heading>
 
                 <flux:text class="mt-2">
-                    You're about to delete "{{ $note->title }}".<br>
-                    This action cannot be reversed.
+                    {{ __('You\'re about to delete ":title".', ['title' => $note->title]) }}<br>
+                    {{ __('This action cannot be reversed.') }}
                 </flux:text>
             </div>
 
@@ -91,10 +91,10 @@ new class extends Component
                 <flux:spacer />
 
                 <flux:modal.close>
-                    <flux:button variant="ghost">Cancel</flux:button>
+                    <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
                 </flux:modal.close>
 
-                <flux:button type="button" variant="danger" wire:click="delete">Delete note</flux:button>
+                <flux:button type="button" variant="danger" wire:click="delete">{{ __('Delete note') }}</flux:button>
             </div>
         </div>
     </flux:modal>

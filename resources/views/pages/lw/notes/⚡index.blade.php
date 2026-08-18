@@ -24,7 +24,7 @@ new #[Title('Notes (Livewire)')] class extends Component
     {
         Notes::findOrFail($id)->delete();
 
-        Flux::toast(text: 'Note deleted.', variant: 'danger');
+        Flux::toast(text: __('Note deleted.'), variant: 'danger');
     }
 
     public function with(): array
@@ -41,13 +41,13 @@ new #[Title('Notes (Livewire)')] class extends Component
         <flux:heading size="lg">
             @if ($search)
                 {{ trans_choice('{0}No notes found|{1}1 note found|[2,*]:count notes found', $notes->total(), ['count' => $notes->total()]) }}
-                for &ldquo;{{ $search }}&rdquo;
+                {{ __('for ":search"', ['search' => $search]) }}
             @else
                 {{ trans_choice('{0}No notes|{1}1 note|[2,*]:count notes', $notes->total(), ['count' => $notes->total()]) }}
             @endif
         </flux:heading>
 
-        <flux:button variant="primary" icon="plus" :href="route('lw.notes.create')" wire:navigate>New note</flux:button>
+        <flux:button variant="primary" icon="plus" :href="route('lw.notes.create')" wire:navigate>{{ __('New note') }}</flux:button>
     </div>
 
     <div class="mt-4 flex items-center gap-2 sm:max-w-xs">
@@ -55,12 +55,12 @@ new #[Title('Notes (Livewire)')] class extends Component
             wire:model.live.debounce.400ms="search"
             type="search"
             icon="magnifying-glass"
-            placeholder="Search notes by title or content&hellip;"
-            aria-label="Search notes by title or content"
+            placeholder="{{ __('Search notes by title or content...') }}"
+            aria-label="{{ __('Search notes by title or content') }}"
         />
 
         @if ($search)
-            <flux:button variant="ghost" size="sm" wire:click="$set('search', '')">Clear</flux:button>
+            <flux:button variant="ghost" size="sm" wire:click="$set('search', '')">{{ __('Clear') }}</flux:button>
         @endif
     </div>
 
@@ -69,16 +69,16 @@ new #[Title('Notes (Livewire)')] class extends Component
             <flux:icon.document-text class="mx-auto size-12 text-gray-400 dark:text-zinc-600" />
 
             @if ($search)
-                <flux:heading size="sm" class="mt-4">No notes found</flux:heading>
-                <flux:text class="mt-1">No notes match &ldquo;{{ $search }}&rdquo;. Try a different search term.</flux:text>
+                <flux:heading size="sm" class="mt-4">{{ __('No notes found') }}</flux:heading>
+                <flux:text class="mt-1">{{ __('No notes match ":search". Try a different search term.', ['search' => $search]) }}</flux:text>
                 <div class="mt-6">
-                    <flux:button wire:click="$set('search', '')">Clear search</flux:button>
+                    <flux:button wire:click="$set('search', '')">{{ __('Clear search') }}</flux:button>
                 </div>
             @else
-                <flux:heading size="sm" class="mt-4">No notes</flux:heading>
-                <flux:text class="mt-1">Get started by creating a new note.</flux:text>
+                <flux:heading size="sm" class="mt-4">{{ __('No notes') }}</flux:heading>
+                <flux:text class="mt-1">{{ __('Get started by creating a new note.') }}</flux:text>
                 <div class="mt-6">
-                    <flux:button variant="primary" icon="plus" :href="route('lw.notes.create')" wire:navigate>New note</flux:button>
+                    <flux:button variant="primary" icon="plus" :href="route('lw.notes.create')" wire:navigate>{{ __('New note') }}</flux:button>
                 </div>
             @endif
         </flux:card>
@@ -92,9 +92,9 @@ new #[Title('Notes (Livewire)')] class extends Component
         <div class="mt-3 hidden md:block">
             <flux:table>
                 <flux:table.columns>
-                    <flux:table.column>Title</flux:table.column>
-                    <flux:table.column>Content</flux:table.column>
-                    <flux:table.column>Created</flux:table.column>
+                    <flux:table.column>{{ __('Title') }}</flux:table.column>
+                    <flux:table.column>{{ __('Content') }}</flux:table.column>
+                    <flux:table.column>{{ __('Created') }}</flux:table.column>
                     <flux:table.column></flux:table.column>
                 </flux:table.columns>
 
@@ -126,12 +126,12 @@ new #[Title('Notes (Livewire)')] class extends Component
                             <flux:table.cell align="end">
                                 <div class="flex justify-end gap-1">
                                     <flux:button variant="ghost" size="sm" icon="pencil" :href="route('lw.notes.edit', $note)" wire:navigate>
-                                        Edit<span class="sr-only">, {{ $note->title }}</span>
+                                        {{ __('Edit') }}<span class="sr-only">, {{ $note->title }}</span>
                                     </flux:button>
 
                                     <flux:modal.trigger name="delete-note-{{ $note->id }}">
                                         <flux:button variant="ghost" size="sm" icon="trash">
-                                            Delete<span class="sr-only">, {{ $note->title }}</span>
+                                            {{ __('Delete') }}<span class="sr-only">, {{ $note->title }}</span>
                                         </flux:button>
                                     </flux:modal.trigger>
                                 </div>
@@ -146,11 +146,11 @@ new #[Title('Notes (Livewire)')] class extends Component
             <flux:modal name="delete-note-{{ $note->id }}" class="min-w-88">
                 <div class="space-y-6">
                     <div>
-                        <flux:heading size="lg">Delete note?</flux:heading>
+                        <flux:heading size="lg">{{ __('Delete note?') }}</flux:heading>
 
                         <flux:text class="mt-2">
-                            You're about to delete "{{ $note->title }}".<br>
-                            This action cannot be reversed.
+                            {{ __('You\'re about to delete ":title".', ['title' => $note->title]) }}<br>
+                            {{ __('This action cannot be reversed.') }}
                         </flux:text>
                     </div>
 
@@ -158,10 +158,10 @@ new #[Title('Notes (Livewire)')] class extends Component
                         <flux:spacer />
 
                         <flux:modal.close>
-                            <flux:button variant="ghost">Cancel</flux:button>
+                            <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
                         </flux:modal.close>
 
-                        <flux:button type="button" variant="danger" wire:click="delete({{ $note->id }})">Delete note</flux:button>
+                        <flux:button type="button" variant="danger" wire:click="delete({{ $note->id }})">{{ __('Delete note') }}</flux:button>
                     </div>
                 </div>
             </flux:modal>

@@ -66,7 +66,7 @@ new class extends Component
 
         $this->note->tags()->sync($this->selectedTagIds);
 
-        Flux::toast(text: $isNew ? 'Note created.' : 'Note updated.', variant: 'success');
+        Flux::toast(text: $isNew ? __('Note created.') : __('Note updated.'), variant: 'success');
 
         $this->redirect(route('notes.show', $this->note), navigate: true);
     }

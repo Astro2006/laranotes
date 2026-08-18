@@ -1,20 +1,20 @@
-<x-layout title="Notes">
+<x-layout :title="__('Notes')">
     <main class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14">
         <div class="flex flex-wrap items-center justify-between gap-4">
             <flux:heading size="lg">
                 @if ($search)
                     {{ trans_choice('{0}No notes found|{1}1 note found|[2,*]:count notes found', $notes->total(), ['count' => $notes->total()]) }}
-                    for &ldquo;{{ $search }}&rdquo;
+                    {{ __('for ":search"', ['search' => $search]) }}
                 @else
                     {{ trans_choice('{0}No notes|{1}1 note|[2,*]:count notes', $notes->total(), ['count' => $notes->total()]) }}
                 @endif
             </flux:heading>
 
-            <flux:button variant="primary" icon="plus" :href="route('notes.create')">New note</flux:button>
+            <flux:button variant="primary" icon="plus" :href="route('notes.create')">{{ __('New note') }}</flux:button>
         </div>
 
         <form method="GET" action="{{ route('notes.index') }}" role="search" class="mt-4">
-            <label for="search" class="sr-only">Search notes by title or content</label>
+            <label for="search" class="sr-only">{{ __('Search notes by title or content') }}</label>
 
             <div class="flex items-center gap-2 sm:max-w-xs">
                 <flux:input
@@ -23,11 +23,11 @@
                     type="search"
                     value="{{ $search }}"
                     icon="magnifying-glass"
-                    placeholder="Search notes by title or content&hellip;"
+                    placeholder="{{ __('Search notes by title or content...') }}"
                 />
 
                 @if ($search)
-                    <flux:button variant="ghost" size="sm" :href="route('notes.index')">Clear</flux:button>
+                    <flux:button variant="ghost" size="sm" :href="route('notes.index')">{{ __('Clear') }}</flux:button>
                 @endif
             </div>
         </form>
@@ -37,16 +37,16 @@
                 <flux:icon.document-text class="mx-auto size-12 text-gray-400 dark:text-zinc-600" />
 
                 @if ($search)
-                    <flux:heading size="sm" class="mt-4">No notes found</flux:heading>
-                    <flux:text class="mt-1">No notes match &ldquo;{{ $search }}&rdquo;. Try a different search term.</flux:text>
+                    <flux:heading size="sm" class="mt-4">{{ __('No notes found') }}</flux:heading>
+                    <flux:text class="mt-1">{{ __('No notes match ":search". Try a different search term.', ['search' => $search]) }}</flux:text>
                     <div class="mt-6">
-                        <flux:button :href="route('notes.index')">Clear search</flux:button>
+                        <flux:button :href="route('notes.index')">{{ __('Clear search') }}</flux:button>
                     </div>
                 @else
-                    <flux:heading size="sm" class="mt-4">No notes</flux:heading>
-                    <flux:text class="mt-1">Get started by creating a new note.</flux:text>
+                    <flux:heading size="sm" class="mt-4">{{ __('No notes') }}</flux:heading>
+                    <flux:text class="mt-1">{{ __('Get started by creating a new note.') }}</flux:text>
                     <div class="mt-6">
-                        <flux:button variant="primary" icon="plus" :href="route('notes.create')">New note</flux:button>
+                        <flux:button variant="primary" icon="plus" :href="route('notes.create')">{{ __('New note') }}</flux:button>
                     </div>
                 @endif
             </flux:card>
@@ -60,10 +60,10 @@
             <div class="mt-3 hidden md:block">
                 <flux:table>
                     <flux:table.columns>
-                        <flux:table.column>Title</flux:table.column>
-                        <flux:table.column>Content</flux:table.column>
-                        <flux:table.column>Tags</flux:table.column>
-                        <flux:table.column>Created</flux:table.column>
+                        <flux:table.column>{{ __('Title') }}</flux:table.column>
+                        <flux:table.column>{{ __('Content') }}</flux:table.column>
+                        <flux:table.column>{{ __('Tags') }}</flux:table.column>
+                        <flux:table.column>{{ __('Created') }}</flux:table.column>
                         <flux:table.column></flux:table.column>
                     </flux:table.columns>
 
@@ -102,12 +102,12 @@
                                 <flux:table.cell align="end">
                                     <div class="flex justify-end gap-1">
                                         <flux:button variant="ghost" size="sm" icon="pencil" :href="route('notes.edit', $note)">
-                                            Edit<span class="sr-only">, {{ $note->title }}</span>
+                                            {{ __('Edit') }}<span class="sr-only">, {{ $note->title }}</span>
                                         </flux:button>
 
                                         <flux:modal.trigger name="delete-note-{{ $note->id }}">
                                             <flux:button variant="ghost" size="sm" icon="trash">
-                                                Delete<span class="sr-only">, {{ $note->title }}</span>
+                                                {{ __('Delete') }}<span class="sr-only">, {{ $note->title }}</span>
                                             </flux:button>
                                         </flux:modal.trigger>
                                     </div>
@@ -122,11 +122,11 @@
                 <flux:modal name="delete-note-{{ $note->id }}" class="min-w-88">
                     <div class="space-y-6">
                         <div>
-                            <flux:heading size="lg">Delete note?</flux:heading>
+                            <flux:heading size="lg">{{ __('Delete note?') }}</flux:heading>
 
                             <flux:text class="mt-2">
-                                You're about to delete "{{ $note->title }}".<br>
-                                This action cannot be reversed.
+                                {{ __('You\'re about to delete ":title".', ['title' => $note->title]) }}<br>
+                                {{ __('This action cannot be reversed.') }}
                             </flux:text>
                         </div>
 
@@ -134,14 +134,14 @@
                             <flux:spacer />
 
                             <flux:modal.close>
-                                <flux:button variant="ghost">Cancel</flux:button>
+                                <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
                             </flux:modal.close>
 
                             <form method="POST" action="{{ route('notes.destroy', $note) }}">
                                 @csrf
                                 @method('DELETE')
 
-                                <flux:button type="submit" variant="danger">Delete note</flux:button>
+                                <flux:button type="submit" variant="danger">{{ __('Delete note') }}</flux:button>
                             </form>
                         </div>
                     </div>

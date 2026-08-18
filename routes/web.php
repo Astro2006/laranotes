@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\NotesController;
+use App\Http\Controllers\SetLocaleController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/notes');
+
+Route::get('/locale/{locale}', SetLocaleController::class)->name('locale.set');
 
 Route::resource('notes', NotesController::class);
 
