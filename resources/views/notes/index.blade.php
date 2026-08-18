@@ -83,7 +83,7 @@
                                     </div>
                                 </flux:table.cell>
 
-                                <flux:table.cell class="max-w-xs truncate">{{ $note->content }}</flux:table.cell>
+                                <flux:table.cell class="max-w-xs truncate">{{ str($note->content)->stripTags()->squish()->limit(200) }}</flux:table.cell>
 
                                 <flux:table.cell>
                                     <div class="flex flex-wrap gap-1">

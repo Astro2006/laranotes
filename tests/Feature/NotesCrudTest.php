@@ -153,3 +153,23 @@ test('no toast is rendered when nothing was flashed', function () {
     $response->assertOk();
     $response->assertDontSee('$flux.toast', false);
 });
+
+test('index page strips html tags from note content', function () {
+    Notes::factory()->create(['content' => '<h2>Test heading</h2>']);
+
+    $response = $this->get(route('notes.index'));
+
+    $response->assertOk();
+    $response->assertDontSee('&lt;h2&gt;', false);
+    $response->assertSeeText('Test heading');
+});
+
+test('index page truncates long note content to 200 characters', function () {
+    Notes::factory()->create(['content' => str_repeat('a', 250)]);
+
+    $response = $this->get(route('notes.index'));
+
+    $response->assertOk();
+    $response->assertSeeText(str_repeat('a', 200).'...');
+    $response->assertDontSee(str_repeat('a', 201));
+});

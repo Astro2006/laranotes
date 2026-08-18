@@ -12,7 +12,7 @@
                 {{ $note->title }}
             </a>
 
-            <p class="truncate text-gray-500 dark:text-zinc-400">{{ $note->content }}</p>
+            <p class="truncate text-gray-500 dark:text-zinc-400">{{ str($note->content)->stripTags()->squish()->limit(200) }}</p>
 
             @if ($note->tags->isNotEmpty())
                 <div class="mt-1 flex flex-wrap gap-1">
