@@ -66,6 +66,12 @@ class NotesIndex extends NativeComponent
             return;
         }
 
+        if ($rowId === NativeCrudFormV2::DELETE_ROW_ID) {
+            $this->deleteFromSheet($id);
+
+            return;
+        }
+
         if ($rowId !== 'save') {
             NativeCrudFormV2::remember($id, $rowId, $value);
 
@@ -102,9 +108,30 @@ class NotesIndex extends NativeComponent
         return NativeCrudFormV2::for(Notes::class)
             ->titles(create: 'New note', edit: 'Edit note')
             ->saveLabels(create: 'Create', edit: 'Save')
+            ->deletable('Delete note')
             ->field('title', 'text', 'Title')
             ->field('content', 'textarea', 'Content')
             ->relation('tags', Tags::class, 'name', 'Tags');
+    }
+
+    /**
+     * Delete the note the "…" menu's Delete item was tapped for, tear down
+     * the sheet's cached field state, and dismiss it.
+     */
+    private function deleteFromSheet(string $handle): void
+    {
+        $meta = NativeCrudFormV2::meta($handle);
+
+        if ($meta === null || $meta['key'] === null) {
+            return;
+        }
+
+        $meta['model']::destroy($meta['key']);
+
+        NativeCrudFormV2::forgetByMeta($handle, $meta);
+        NativeForm::dismiss();
+
+        $this->loadNotes();
     }
 
     private function loadNotes(): void

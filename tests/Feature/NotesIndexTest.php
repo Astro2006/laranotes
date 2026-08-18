@@ -2,6 +2,7 @@
 
 use App\Models\Notes;
 use App\NativeComponents\NotesIndex;
+use Codebar\NativeCrudFormV2\NativeCrudFormV2;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Native\Mobile\Events\NativeForm\ValueChanged;
 use Native\Mobile\Testing\Native;
@@ -95,6 +96,23 @@ it('deletes a note', function () {
 
     Native::test(NotesIndex::class)
         ->call('delete', $note->uuid);
+
+    $this->assertDatabaseMissing('notes', ['uuid' => $note->uuid]);
+});
+
+it('deletes a note from the sheet\'s delete menu item and dismisses it', function () {
+    $note = Notes::factory()->create();
+    $handle = "crud:notes:{$note->id}";
+
+    Native::test(NotesIndex::class)
+        ->call('edit', $note->uuid)
+        ->emitNative(ValueChanged::class, [
+            'rowId' => NativeCrudFormV2::DELETE_ROW_ID,
+            'type' => 'button',
+            'value' => true,
+            'id' => $handle,
+        ])
+        ->assertNativeCalled('NativeForm.Dismiss');
 
     $this->assertDatabaseMissing('notes', ['uuid' => $note->uuid]);
 });

@@ -11,7 +11,7 @@
     <native:refreshable @refresh="refresh" class="w-full h-full">
         <native:column class="w-full">
             @foreach ($notes as $note)
-                <native:row key="{{ $note['uuid'] }}" class="items-center gap-1 px-2">
+                <native:row key="{{ $note['uuid'] }}" class="items-center gap-1 px-2 border-b border-gray-200">
                     <native:pressable class="flex-1" @press="edit('{{ $note['uuid'] }}')">
                         <native:toolkit-list-item
                             headline="{{ $note['title'] }}"
@@ -25,8 +25,6 @@
                         <native:icon name="trash" class="text-red-500" />
                     </native:pressable>
                 </native:row>
-
-                <native:divider />
             @endforeach
         </native:column>
     </native:refreshable>
