@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "70bf24dc5919ffa21918f9902166ce43",
+    "content-hash": "efaa36231ea4129b08e1364c03e98c2c",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -188,6 +188,99 @@
                 }
             ],
             "time": "2024-02-09T16:56:22+00:00"
+        },
+        {
+            "name": "codebar/mobile-toolkit",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "/Users/julian_leipert/Projects/mobile.fileoperation.plugin",
+                "reference": "f2b0c1593024c49d9f752c2a96ebf124151b93b0"
+            },
+            "require": {
+                "nativephp/mobile": "^3.0 || ^4.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "laravel/framework": "^13.19",
+                "laravel/pint": "^1.29",
+                "nativephp/mobile": "^4.0",
+                "pestphp/pest": "^4.7",
+                "phpstan/phpstan": "^2.2"
+            },
+            "type": "nativephp-plugin",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Codebar\\MobileToolkit\\MobileToolkitServiceProvider",
+                        "Native\\Mobile\\Providers\\ActionSheetServiceProvider",
+                        "Native\\Mobile\\NativeFormServiceProvider",
+                        "Codebar\\FileActionSheet\\FileActionSheetServiceProvider",
+                        "Codebar\\NativeGlassButton\\NativeGlassButtonServiceProvider",
+                        "Codebar\\NativeSegmentedPicker\\NativeSegmentedPickerServiceProvider",
+                        "Codebar\\NativeStatusFab\\NativeStatusFabServiceProvider",
+                        "Codebar\\NativePulsingButton\\NativePulsingButtonServiceProvider",
+                        "Codebar\\NativeIconButton\\NativeIconButtonServiceProvider",
+                        "Codebar\\NativeListItem\\NativeListItemServiceProvider",
+                        "Codebar\\LargeTitles\\LargeTitlesServiceProvider",
+                        "Codebar\\AppLocale\\AppLocaleServiceProvider",
+                        "Codebar\\ConnectNetworkButton\\ConnectNetworkButtonServiceProvider",
+                        "Codebar\\LoadingSpinner\\LoadingSpinnerServiceProvider",
+                        "Codebar\\LoginInputs\\LoginInputsServiceProvider",
+                        "Codebar\\ProfileCard\\ProfileCardServiceProvider",
+                        "Codebar\\NativeStyledText\\NativeStyledTextServiceProvider",
+                        "Codebar\\NativeCrudFormV2\\NativeCrudFormV2ServiceProvider"
+                    ]
+                },
+                "nativephp": {
+                    "manifest": "nativephp.json"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Codebar\\MobileToolkit\\": "src/MobileToolkit/",
+                    "Native\\Mobile\\": "src/NativeMobile/",
+                    "Codebar\\FileActionSheet\\": "src/FileActionSheet/",
+                    "Codebar\\NativeGlassButton\\": "src/NativeGlassButton/",
+                    "Codebar\\NativeSegmentedPicker\\": "src/NativeSegmentedPicker/",
+                    "Codebar\\NativeStatusFab\\": "src/NativeStatusFab/",
+                    "Codebar\\NativePulsingButton\\": "src/NativePulsingButton/",
+                    "Codebar\\NativeIconButton\\": "src/NativeIconButton/",
+                    "Codebar\\NativeListItem\\": "src/NativeListItem/",
+                    "Codebar\\LargeTitles\\": "src/LargeTitles/",
+                    "Codebar\\AppLocale\\": "src/AppLocale/",
+                    "Codebar\\ConnectNetworkButton\\": "src/ConnectNetworkButton/",
+                    "Codebar\\LoadingSpinner\\": "src/LoadingSpinner/",
+                    "Codebar\\LoginInputs\\": "src/LoginInputs/",
+                    "Codebar\\ProfileCard\\": "src/ProfileCard/",
+                    "Codebar\\NativeStyledText\\": "src/NativeStyledText/",
+                    "Codebar\\NativeCrudFormV2\\": "src/NativeCrudFormV2/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Tests\\": "tests/",
+                    "Codebar\\MobileToolkit\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "pest"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Your Name",
+                    "email": "you@example.com"
+                }
+            ],
+            "description": "A NativePHP Mobile plugin bundling image editing, file picking, file previewing, document scanning, action sheets, native forms, and native UI controls (glass button, segmented picker, status fab)",
+            "transport-options": {
+                "relative": false
+            }
         },
         {
             "name": "dasprid/enum",
@@ -11322,7 +11415,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "codebar/mobile-toolkit": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

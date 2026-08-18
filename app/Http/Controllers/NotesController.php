@@ -6,6 +6,7 @@ use App\Http\Requests\StoreNotesRequest;
 use App\Http\Requests\UpdateNotesRequest;
 use App\Models\Notes;
 use App\Models\Tags;
+use Codebar\NativeCrudFormV2\NativeCrudFormV2;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -31,6 +32,39 @@ class NotesController extends Controller
     public function create(): View
     {
         return view('notes.create');
+    }
+
+    /**
+     * Present the native create-note popup.
+     */
+    public function presentNativeCreate(): RedirectResponse
+    {
+        $this->noteForm()->presentCreate();
+
+        return redirect()->route('notes.index');
+    }
+
+    /**
+     * Present the native edit-note popup.
+     */
+    public function presentNativeEdit(Notes $note): RedirectResponse
+    {
+        $this->noteForm()->presentEdit($note->load('tags'));
+
+        return redirect()->route('notes.index');
+    }
+
+    /**
+     * Build the native CRUD form definition for notes.
+     */
+    protected function noteForm(): NativeCrudFormV2
+    {
+        return NativeCrudFormV2::for(Notes::class)
+            ->titles(create: 'New note', edit: 'Edit note')
+            ->saveLabels(create: 'Create', edit: 'Save')
+            ->field('title', 'text', 'Title')
+            ->field('content', 'textarea', 'Content')
+            ->relation('tags', Tags::class, 'name', 'Tags');
     }
 
     /**

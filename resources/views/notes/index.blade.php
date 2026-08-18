@@ -10,7 +10,7 @@
                 @endif
             </flux:heading>
 
-            <flux:button variant="primary" icon="plus" :href="route('notes.create')">New note</flux:button>
+            <flux:button variant="primary" icon="plus" :href="route('notes.native.create')">New note</flux:button>
         </div>
 
         <form method="GET" action="{{ route('notes.index') }}" role="search" class="mt-4">
@@ -46,7 +46,7 @@
                     <flux:heading size="sm" class="mt-4">No notes</flux:heading>
                     <flux:text class="mt-1">Get started by creating a new note.</flux:text>
                     <div class="mt-6">
-                        <flux:button variant="primary" icon="plus" :href="route('notes.create')">New note</flux:button>
+                        <flux:button variant="primary" icon="plus" :href="route('notes.native.create')">New note</flux:button>
                     </div>
                 @endif
             </flux:card>

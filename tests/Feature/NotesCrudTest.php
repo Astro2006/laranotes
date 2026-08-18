@@ -14,6 +14,29 @@ test('create page renders the note form', function () {
     $response->assertSeeText('Content');
 });
 
+test('presenting the native create popup redirects to the index page', function () {
+    $response = $this->get(route('notes.native.create'));
+
+    $response->assertRedirect(route('notes.index'));
+});
+
+test('presenting the native edit popup redirects to the index page', function () {
+    $note = Notes::factory()->create();
+
+    $response = $this->get(route('notes.native.edit', $note));
+
+    $response->assertRedirect(route('notes.index'));
+});
+
+test('the note card links to the native edit popup', function () {
+    $note = Notes::factory()->create();
+
+    $response = $this->get(route('notes.index'));
+
+    $response->assertOk();
+    $response->assertSee(route('notes.native.edit', $note), false);
+});
+
 test('storing a note creates it and redirects to the show page', function () {
     $note = Notes::factory()->make();
 
