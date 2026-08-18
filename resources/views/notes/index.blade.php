@@ -62,6 +62,7 @@
                     <flux:table.columns>
                         <flux:table.column>Title</flux:table.column>
                         <flux:table.column>Content</flux:table.column>
+                        <flux:table.column>Tags</flux:table.column>
                         <flux:table.column>Created</flux:table.column>
                         <flux:table.column></flux:table.column>
                     </flux:table.columns>
@@ -83,6 +84,14 @@
                                 </flux:table.cell>
 
                                 <flux:table.cell class="max-w-xs truncate">{{ $note->content }}</flux:table.cell>
+
+                                <flux:table.cell>
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach ($note->tags as $tag)
+                                            <x-tag-badge :tag="$tag" />
+                                        @endforeach
+                                    </div>
+                                </flux:table.cell>
 
                                 <flux:table.cell class="whitespace-nowrap">
                                     <time datetime="{{ $note->created_at->toIso8601String() }}">
