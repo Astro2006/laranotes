@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Notes;
+use Flux\Flux;
 use Livewire\Component;
 
 new class extends Component
@@ -10,6 +11,8 @@ new class extends Component
     public function delete(): void
     {
         $this->note->delete();
+
+        Flux::toast(text: 'Note deleted.', variant: 'danger');
 
         $this->redirect(route('lw.notes.index'), navigate: true);
     }
@@ -28,6 +31,14 @@ new class extends Component
 
     <flux:card class="mt-6 p-6 sm:p-8">
         <flux:heading size="xl">{{ $note->title }}</flux:heading>
+
+        @if ($note->tags->isNotEmpty())
+            <div class="mt-3 flex flex-wrap gap-1">
+                @foreach ($note->tags as $tag)
+                    <x-tag-badge :tag="$tag" />
+                @endforeach
+            </div>
+        @endif
 
         <flux:text variant="subtle" class="mt-1 text-xs">
             Created
@@ -60,14 +71,31 @@ new class extends Component
     <div class="mt-6 flex flex-wrap items-center gap-3">
         <flux:button variant="primary" icon="pencil" :href="route('lw.notes.edit', $note)" wire:navigate>Edit note</flux:button>
 
-        <flux:button
-            type="button"
-            variant="danger"
-            icon="trash"
-            wire:click="delete"
-            wire:confirm="Delete this note? This cannot be undone."
-        >
-            Delete note
-        </flux:button>
+        <flux:modal.trigger name="delete-note">
+            <flux:button variant="danger" icon="trash">Delete note</flux:button>
+        </flux:modal.trigger>
     </div>
+
+    <flux:modal name="delete-note" class="min-w-88">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Delete note?</flux:heading>
+
+                <flux:text class="mt-2">
+                    You're about to delete "{{ $note->title }}".<br>
+                    This action cannot be reversed.
+                </flux:text>
+            </div>
+
+            <div class="flex gap-2">
+                <flux:spacer />
+
+                <flux:modal.close>
+                    <flux:button variant="ghost">Cancel</flux:button>
+                </flux:modal.close>
+
+                <flux:button type="button" variant="danger" wire:click="delete">Delete note</flux:button>
+            </div>
+        </div>
+    </flux:modal>
 </main>

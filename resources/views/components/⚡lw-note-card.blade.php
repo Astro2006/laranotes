@@ -24,6 +24,14 @@ new class extends Component
             </a>
 
             <p class="truncate text-gray-500 dark:text-zinc-400">{{ Str::of($note->content)->stripTags()->squish() }}</p>
+
+            @if ($note->tags->isNotEmpty())
+                <div class="mt-1 flex flex-wrap gap-1">
+                    @foreach ($note->tags as $tag)
+                        <x-tag-badge :tag="$tag" />
+                    @endforeach
+                </div>
+            @endif
         </div>
 
         <time
