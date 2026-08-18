@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuidTrait;
 use Database\Factories\TagsFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +14,7 @@ use Illuminate\Support\Str;
 class Tags extends Model
 {
     /** @use HasFactory<TagsFactory> */
-    use HasFactory;
+    use HasFactory, HasUuidTrait;
 
     /** @var array<int, string> */
     protected $guarded = [];

@@ -94,3 +94,21 @@ test('deleting a note removes it and redirects to the index page', function () {
     $response->assertRedirect(route('notes.index'));
     $this->assertDatabaseMissing('notes', ['id' => $note->id]);
 });
+
+test('note urls use the uuid instead of the incrementing id', function () {
+    $note = Notes::factory()->create();
+
+    $url = route('notes.show', $note);
+
+    expect($url)
+        ->toContain($note->uuid)
+        ->not->toContain("/notes/{$note->id}");
+});
+
+test('visiting a note by its raw incrementing id returns not found', function () {
+    $note = Notes::factory()->create();
+
+    $response = $this->get("/notes/{$note->id}");
+
+    $response->assertNotFound();
+});

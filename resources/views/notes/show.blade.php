@@ -37,12 +37,37 @@
         <div class="mt-6 flex flex-wrap items-center gap-3">
             <flux:button variant="primary" icon="pencil" :href="route('notes.edit', $note)">Edit note</flux:button>
 
-            <form method="POST" action="{{ route('notes.destroy', $note) }}">
-                @csrf
-                @method('DELETE')
-
-                <flux:button type="submit" variant="danger" icon="trash">Delete note</flux:button>
-            </form>
+            <flux:modal.trigger name="delete-note">
+                <flux:button variant="danger" icon="trash">Delete note</flux:button>
+            </flux:modal.trigger>
         </div>
+
+        <flux:modal name="delete-note" class="min-w-88">
+            <div class="space-y-6">
+                <div>
+                    <flux:heading size="lg">Delete note?</flux:heading>
+
+                    <flux:text class="mt-2">
+                        You're about to delete "{{ $note->title }}".<br>
+                        This action cannot be reversed.
+                    </flux:text>
+                </div>
+
+                <div class="flex gap-2">
+                    <flux:spacer />
+
+                    <flux:modal.close>
+                        <flux:button variant="ghost">Cancel</flux:button>
+                    </flux:modal.close>
+
+                    <form method="POST" action="{{ route('notes.destroy', $note) }}">
+                        @csrf
+                        @method('DELETE')
+
+                        <flux:button type="submit" variant="danger">Delete note</flux:button>
+                    </form>
+                </div>
+            </div>
+        </flux:modal>
     </main>
 </x-layout>
