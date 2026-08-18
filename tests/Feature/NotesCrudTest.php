@@ -25,6 +25,7 @@ test('storing a note creates it and redirects to the show page', function () {
     $created = Notes::sole();
 
     $response->assertRedirect(route('notes.show', $created));
+    $response->assertSessionHas('toast', ['text' => 'Note created.', 'variant' => 'success']);
     $this->assertDatabaseHas('notes', [
         'title' => $note->title,
         'content' => $note->content,
@@ -69,6 +70,7 @@ test('updating a note persists changes and redirects to the show page', function
     ]);
 
     $response->assertRedirect(route('notes.show', $note));
+    $response->assertSessionHas('toast', ['text' => 'Note updated.', 'variant' => 'success']);
     $this->assertDatabaseHas('notes', [
         'id' => $note->id,
         'title' => 'Updated title',
@@ -92,6 +94,7 @@ test('deleting a note removes it and redirects to the index page', function () {
     $response = $this->delete(route('notes.destroy', $note));
 
     $response->assertRedirect(route('notes.index'));
+    $response->assertSessionHas('toast', ['text' => 'Note deleted.', 'variant' => 'danger']);
     $this->assertDatabaseMissing('notes', ['id' => $note->id]);
 });
 

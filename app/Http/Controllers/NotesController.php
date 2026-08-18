@@ -42,6 +42,8 @@ class NotesController extends Controller
 
         $note->tags()->sync(Tags::fromNameList($request->validated('tags'))->pluck('id'));
 
+        session()->flash('toast', ['text' => 'Note created.', 'variant' => 'success']);
+
         return redirect()->route('notes.show', $note);
     }
 
@@ -76,6 +78,8 @@ class NotesController extends Controller
             $note->tags()->sync(Tags::fromNameList($request->validated('tags'))->pluck('id'));
         }
 
+        session()->flash('toast', ['text' => 'Note updated.', 'variant' => 'success']);
+
         return redirect()->route('notes.show', $note);
     }
 
@@ -85,6 +89,8 @@ class NotesController extends Controller
     public function destroy(Notes $note): RedirectResponse
     {
         $note->delete();
+
+        session()->flash('toast', ['text' => 'Note deleted.', 'variant' => 'danger']);
 
         return redirect()->route('notes.index');
     }

@@ -18,6 +18,16 @@
     <body class="min-h-full bg-zinc-50 font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100">
         {{ $slot }}
 
+        @persist('toast')
+            <flux:toast.group>
+                <flux:toast />
+            </flux:toast.group>
+        @endpersist
+
+        @if (session('toast'))
+            <div x-data x-init="$flux.toast({ text: @js(session('toast.text')), variant: @js(session('toast.variant')) })"></div>
+        @endif
+
         @fluxScripts
     </body>
 </html>

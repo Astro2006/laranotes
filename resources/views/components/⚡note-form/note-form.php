@@ -3,6 +3,7 @@
 use App\Models\Notes;
 use App\Models\Tags;
 use App\Rules\NoteRules;
+use Flux\Flux;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -55,6 +56,8 @@ new class extends Component
             'content' => ['required', 'string', new NoteRules],
         ]);
 
+        $isNew = ! $this->note;
+
         if ($this->note) {
             $this->note->update($validated);
         } else {
@@ -63,6 +66,8 @@ new class extends Component
 
         $this->note->tags()->sync($this->selectedTagIds);
 
-        $this->redirect(route('notes.show', $this->note));
+        Flux::toast(text: $isNew ? 'Note created.' : 'Note updated.', variant: 'success');
+
+        $this->redirect(route('notes.show', $this->note), navigate: true);
     }
 };
