@@ -1,4 +1,4 @@
-<x-layout :title="__('New note')">
+<x-layout :title="__('note.new')">
     <main class="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
         <flux:button variant="ghost" size="sm" icon="arrow-left" :href="route('notes.index')">
             {{ __('All notes') }}
